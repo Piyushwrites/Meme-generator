@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Message to Meme Converter</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -19,9 +19,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 20px 10px;
         }
-
         .container {
             max-width: 800px;
             width: 100%;
@@ -30,39 +29,33 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
         }
-
         .header {
             background: linear-gradient(45deg, #ff6b6b, #feca57);
-            padding: 30px;
+            padding: 30px 20px;
             text-align: center;
             color: white;
         }
-
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-
         .header p {
             font-size: 1.2em;
             opacity: 0.9;
         }
-
         .input-section {
-            padding: 40px;
+            padding: 40px 30px;
             background: #f8f9fa;
         }
-
         .input-group {
             position: relative;
             margin-bottom: 20px;
         }
-
         textarea {
             width: 100%;
-            min-height: 120px;
-            padding: 20px;
+            min-height: 130px;
+            padding: 18px;
             border: 3px solid #e9ecef;
             border-radius: 15px;
             font-size: 1.1em;
@@ -70,22 +63,19 @@
             resize: vertical;
             transition: all 0.3s ease;
         }
-
         textarea:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-
         .meme-templates {
             display: flex;
             gap: 10px;
             margin: 20px 0;
             flex-wrap: wrap;
         }
-
         .template-btn {
-            padding: 10px 15px;
+            padding: 10px 16px;
             border: none;
             border-radius: 25px;
             background: #667eea;
@@ -94,13 +84,12 @@
             font-family: inherit;
             font-weight: bold;
             transition: all 0.3s ease;
+            font-size: 0.95em;
         }
-
         .template-btn:hover {
             background: #5a67d8;
             transform: translateY(-2px);
         }
-
         .generate-btn {
             width: 100%;
             padding: 18px;
@@ -114,35 +103,23 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         .generate-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
         }
-
         .generate-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none;
         }
-
         .meme-section {
-            padding: 40px;
+            padding: 30px;
             display: none;
             animation: slideUp 0.5s ease;
         }
-
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
         .meme-container {
             position: relative;
             max-width: 500px;
@@ -151,14 +128,12 @@
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
-
         .meme-image {
             width: 100%;
             height: 400px;
             object-fit: cover;
             display: block;
         }
-
         .meme-text {
             position: absolute;
             left: 50%;
@@ -166,65 +141,128 @@
             color: white;
             font-size: 2.5em;
             font-weight: bold;
-            text-shadow: 3px 3px 0 #000;
+            text-shadow: 3px 3px 0 #000, -2px -2px 0 #000;
             text-align: center;
             max-width: 90%;
             word-wrap: break-word;
             pointer-events: none;
+            line-height: 1.1;
         }
-
-        .top-text {
-            top: 20px;
-        }
-
-        .bottom-text {
-            bottom: 20px;
-        }
-
+        .top-text { top: 20px; }
+        .bottom-text { bottom: 20px; }
         .actions {
             display: flex;
             gap: 15px;
             justify-content: center;
             flex-wrap: wrap;
         }
-
         .action-btn {
-            padding: 12px 24px;
+            padding: 14px 28px;
             border: none;
             border-radius: 25px;
             font-family: inherit;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 1.05em;
+            min-width: 160px;
         }
-
         .download-btn {
             background: #28a745;
             color: white;
         }
-
         .download-btn:hover {
             background: #218838;
             transform: translateY(-2px);
         }
-
         .new-meme-btn {
             background: #17a2b8;
             color: white;
         }
-
         .new-meme-btn:hover {
             background: #138496;
             transform: translateY(-2px);
         }
 
+        /* ==================== MOBILE BEAUTY ==================== */
         @media (max-width: 768px) {
-            .meme-text {
-                font-size: 1.8em;
+            body {
+                padding: 12px 8px;
             }
-            
+            .header {
+                padding: 25px 15px;
+            }
             .header h1 {
-                font-size: 2em;
+                font-size: 2.1em;
+            }
+            .header p {
+                font-size: 1.05em;
+            }
+            .input-section {
+                padding: 25px 20px;
+            }
+            .meme-section {
+                padding: 25px 15px;
+            }
+            .meme-image {
+                height: 320px;
+            }
+            .meme-text {
+                font-size: 1.65em;
+            }
+            .top-text { top: 15px; }
+            .bottom-text { bottom: 15px; }
+            .generate-btn {
+                padding: 16px;
+                font-size: 1.25em;
+            }
+            .template-btn {
+                padding: 9px 14px;
+                font-size: 0.9em;
+            }
+            .actions {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .action-btn {
+                width: 100%;
+                min-width: unset;
+                padding: 16px;
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.85em;
+            }
+            .meme-image {
+                height: 280px;
+            }
+            .meme-text {
+                font-size: 1.45em;
+            }
+            .input-section {
+                padding: 20px 15px;
+            }
+            .meme-section {
+                padding: 20px 12px;
+            }
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 15px;
+            width: 100%;
+            max-width: 800px;
+        }
+        @media (max-width: 768px) {
+            footer {
+                font-size: 13.5px;
+                margin-top: 30px;
             }
         }
     </style>
@@ -235,16 +273,15 @@
             <h1>😂 Message to Meme 😂</h1>
             <p>Turn your messages into epic memes instantly!</p>
         </div>
-
         <div class="input-section" id="inputSection">
             <div class="input-group">
-                <textarea 
-                    id="messageInput" 
+                <textarea
+                    id="messageInput"
                     placeholder="Enter your message here... (e.g., 'When you finally understand quantum physics')"
                     maxlength="200"
                 ></textarea>
             </div>
-            
+           
             <div class="meme-templates">
                 <button class="template-btn" onclick="setTemplate('When you...')">When you...</button>
                 <button class="template-btn" onclick="setTemplate('Me trying to...')">Me trying to...</button>
@@ -252,19 +289,17 @@
                 <button class="template-btn" onclick="setTemplate('This is fine')">This is fine</button>
                 <button class="template-btn" onclick="setTemplate('Surprised Pikachu')">Surprised</button>
             </div>
-
             <button class="generate-btn" id="generateBtn" onclick="generateMeme()">
                 🚀 Generate Meme!
             </button>
         </div>
-
         <div class="meme-section" id="memeSection">
             <div class="meme-container" id="memeContainer">
                 <img class="meme-image" id="memeImage" alt="Meme">
                 <div class="meme-text top-text" id="topText"></div>
                 <div class="meme-text bottom-text" id="bottomText"></div>
             </div>
-            
+           
             <div class="actions">
                 <button class="action-btn download-btn" onclick="downloadMeme()">
                     💾 Download Meme
@@ -276,6 +311,11 @@
         </div>
     </div>
 
+    <!-- Beautiful Footer -->
+    <footer>
+        © 2026 Built with ❤️ Curiosity &amp; Love by <strong>Piyush Sahoo</strong>
+    </footer>
+
     <script>
         const templates = {
             'drake': 'https://i.imgflip.com/30b1gx.jpg',
@@ -286,7 +326,6 @@
             'change-my-mind': 'https://i.imgflip.com/24y43o.jpg',
             'mocking-sponge-bob': 'https://i.imgflip.com/3si4.jpg'
         };
-
         const templateNames = Object.keys(templates);
 
         function setTemplate(templateText) {
@@ -302,7 +341,6 @@
         function splitText(text) {
             const words = text.split(' ');
             if (words.length <= 4) return { top: text, bottom: '' };
-            
             const mid = Math.floor(words.length / 2);
             return {
                 top: words.slice(0, mid).join(' '),
@@ -316,7 +354,6 @@
                 alert('Please enter a message first! 😅');
                 return;
             }
-
             const imageUrl = getRandomTemplate();
             const { top, bottom } = splitText(input);
 
@@ -329,8 +366,8 @@
 
             // Celebration confetti!
             confetti({
-                particleCount: 100,
-                spread: 70,
+                particleCount: 120,
+                spread: 80,
                 origin: { y: 0.6 }
             });
         }
@@ -339,11 +376,12 @@
             const memeContainer = document.getElementById('memeContainer');
             html2canvas(memeContainer, {
                 backgroundColor: null,
-                scale: 2
+                scale: 2,
+                useCORS: true
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'my-awesome-meme.png';
-                link.href = canvas.toDataURL();
+                link.href = canvas.toDataURL('image/png');
                 link.click();
             });
         }
@@ -355,21 +393,12 @@
             document.getElementById('messageInput').focus();
         }
 
-        // Add html2canvas for download functionality
-        const script = document.createElement('script');
-        script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
-        document.head.appendChild(script);
-
-        // Enter key to generate
+        // Enter key (Ctrl + Enter) to generate
         document.getElementById('messageInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && e.ctrlKey) {
                 generateMeme();
             }
         });
     </script>
-    <footer>
-        <br></br>
-    © 2026 Built with ❤️ Curiosity &amp; Love by <strong>Piyush Sahoo</strong>
-</footer>
 </body>
 </html>
