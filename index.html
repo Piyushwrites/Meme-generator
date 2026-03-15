@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Message to Meme Converter</title>
+    
+    <!-- NEW: Google Font for beautiful mobile look -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Impact&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -13,7 +18,7 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Fredoka', 'Comic Sans MS', cursive, sans-serif; /* ← Changed to Fredoka (super clean & fun on mobile) */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -48,10 +53,6 @@
             padding: 40px 30px;
             background: #f8f9fa;
         }
-        .input-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
         textarea {
             width: 100%;
             min-height: 130px;
@@ -82,7 +83,7 @@
             color: white;
             cursor: pointer;
             font-family: inherit;
-            font-weight: bold;
+            font-weight: 600;
             transition: all 0.3s ease;
             font-size: 0.95em;
         }
@@ -98,18 +99,10 @@
             border: none;
             border-radius: 15px;
             font-size: 1.3em;
-            font-weight: bold;
+            font-weight: 700;
             font-family: inherit;
             cursor: pointer;
             transition: all 0.3s ease;
-        }
-        .generate-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
-        }
-        .generate-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
         }
         .meme-section {
             padding: 30px;
@@ -134,19 +127,22 @@
             object-fit: cover;
             display: block;
         }
+        /* 🔥 CLASSIC MEME FONT for text (looks perfect on mobile) */
         .meme-text {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
+            font-family: 'Impact', sans-serif; /* ← Changed to real meme font */
             color: white;
             font-size: 2.5em;
-            font-weight: bold;
+            font-weight: 900;
             text-shadow: 3px 3px 0 #000, -2px -2px 0 #000;
             text-align: center;
             max-width: 90%;
             word-wrap: break-word;
             pointer-events: none;
-            line-height: 1.1;
+            line-height: 1.05;
+            letter-spacing: -1px;
         }
         .top-text { top: 20px; }
         .bottom-text { bottom: 20px; }
@@ -161,54 +157,27 @@
             border: none;
             border-radius: 25px;
             font-family: inherit;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 1.05em;
             min-width: 160px;
         }
-        .download-btn {
-            background: #28a745;
-            color: white;
-        }
-        .download-btn:hover {
-            background: #218838;
-            transform: translateY(-2px);
-        }
-        .new-meme-btn {
-            background: #17a2b8;
-            color: white;
-        }
-        .new-meme-btn:hover {
-            background: #138496;
-            transform: translateY(-2px);
-        }
 
-        /* ==================== MOBILE BEAUTY ==================== */
+        /* ==================== MOBILE BEAUTY (font looks even better here) ==================== */
         @media (max-width: 768px) {
             body {
                 padding: 12px 8px;
-            }
-            .header {
-                padding: 25px 15px;
+                font-size: 16px; /* slightly bigger base for mobile readability */
             }
             .header h1 {
                 font-size: 2.1em;
-            }
-            .header p {
-                font-size: 1.05em;
-            }
-            .input-section {
-                padding: 25px 20px;
-            }
-            .meme-section {
-                padding: 25px 15px;
             }
             .meme-image {
                 height: 320px;
             }
             .meme-text {
-                font-size: 1.65em;
+                font-size: 1.75em; /* bigger & bolder on phone */
             }
             .top-text { top: 15px; }
             .bottom-text { bottom: 15px; }
@@ -233,24 +202,14 @@
         }
 
         @media (max-width: 480px) {
-            .header h1 {
-                font-size: 1.85em;
+            .meme-text {
+                font-size: 1.55em;
             }
             .meme-image {
                 height: 280px;
             }
-            .meme-text {
-                font-size: 1.45em;
-            }
-            .input-section {
-                padding: 20px 15px;
-            }
-            .meme-section {
-                padding: 20px 12px;
-            }
         }
 
-        /* Footer */
         footer {
             margin-top: 40px;
             text-align: center;
@@ -258,6 +217,7 @@
             font-size: 15px;
             width: 100%;
             max-width: 800px;
+            font-family: inherit;
         }
         @media (max-width: 768px) {
             footer {
@@ -311,9 +271,8 @@
         </div>
     </div>
 
-    <!-- Beautiful Footer -->
     <footer>
-        © 2026 Built with ❤️ Curiosity &amp; Love by <strong>Piyush Sahoo</strong>
+        © 2026 Built with Curiosity &amp; Love by <strong>Piyush Sahoo</strong>
     </footer>
 
     <script>
@@ -364,7 +323,6 @@
             document.getElementById('inputSection').style.display = 'none';
             document.getElementById('memeSection').style.display = 'block';
 
-            // Celebration confetti!
             confetti({
                 particleCount: 120,
                 spread: 80,
@@ -393,7 +351,6 @@
             document.getElementById('messageInput').focus();
         }
 
-        // Enter key (Ctrl + Enter) to generate
         document.getElementById('messageInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && e.ctrlKey) {
                 generateMeme();
