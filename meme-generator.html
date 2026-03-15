@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message to Meme Converter</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .input-section {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 20px;
+            border: 3px solid #e9ecef;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .meme-templates {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .template-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 25px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .template-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.3em;
+            font-weight: bold;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .meme-section {
+            padding: 40px;
+            display: none;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .meme-container {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .meme-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .meme-text {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 2.5em;
+            font-weight: bold;
+            text-shadow: 3px 3px 0 #000;
+            text-align: center;
+            max-width: 90%;
+            word-wrap: break-word;
+            pointer-events: none;
+        }
+
+        .top-text {
+            top: 20px;
+        }
+
+        .bottom-text {
+            bottom: 20px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .new-meme-btn {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .new-meme-btn:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .meme-text {
+                font-size: 1.8em;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>😂 Message to Meme 😂</h1>
+            <p>Turn your messages into epic memes instantly!</p>
+        </div>
+
+        <div class="input-section" id="inputSection">
+            <div class="input-group">
+                <textarea 
+                    id="messageInput" 
+                    placeholder="Enter your message here... (e.g., 'When you finally understand quantum physics')"
+                    maxlength="200"
+                ></textarea>
+            </div>
+            
+            <div class="meme-templates">
+                <button class="template-btn" onclick="setTemplate('When you...')">When you...</button>
+                <button class="template-btn" onclick="setTemplate('Me trying to...')">Me trying to...</button>
+                <button class="template-btn" onclick="setTemplate('Expectation vs Reality')">Exp vs Real</button>
+                <button class="template-btn" onclick="setTemplate('This is fine')">This is fine</button>
+                <button class="template-btn" onclick="setTemplate('Surprised Pikachu')">Surprised</button>
+            </div>
+
+            <button class="generate-btn" id="generateBtn" onclick="generateMeme()">
+                🚀 Generate Meme!
+            </button>
+        </div>
+
+        <div class="meme-section" id="memeSection">
+            <div class="meme-container" id="memeContainer">
+                <img class="meme-image" id="memeImage" alt="Meme">
+                <div class="meme-text top-text" id="topText"></div>
+                <div class="meme-text bottom-text" id="bottomText"></div>
+            </div>
+            
+            <div class="actions">
+                <button class="action-btn download-btn" onclick="downloadMeme()">
+                    💾 Download Meme
+                </button>
+                <button class="action-btn new-meme-btn" onclick="newMeme()">
+                    ✨ New Meme
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const templates = {
+            'drake': 'https://i.imgflip.com/30b1gx.jpg',
+            'success-kid': 'https://i.imgflip.com/1g8my4.jpg',
+            'distracted-boyfriend': 'https://i.imgflip.com/1ur9b0.jpg',
+            'this-is-fine': 'https://i.imgflip.com/1bhk.jpg',
+            'surprised-pikachu': 'https://i.redd.it/cn4lx48qy7i61.jpg',
+            'change-my-mind': 'https://i.imgflip.com/24y43o.jpg',
+            'mocking-sponge-bob': 'https://i.imgflip.com/3si4.jpg'
+        };
+
+        const templateNames = Object.keys(templates);
+
+        function setTemplate(templateText) {
+            document.getElementById('messageInput').value = templateText;
+            document.getElementById('messageInput').focus();
+        }
+
+        function getRandomTemplate() {
+            const randomIndex = Math.floor(Math.random() * templateNames.length);
+            return templates[templateNames[randomIndex]];
+        }
+
+        function splitText(text) {
+            const words = text.split(' ');
+            if (words.length <= 4) return { top: text, bottom: '' };
+            
+            const mid = Math.floor(words.length / 2);
+            return {
+                top: words.slice(0, mid).join(' '),
+                bottom: words.slice(mid).join(' ')
+            };
+        }
+
+        function generateMeme() {
+            const input = document.getElementById('messageInput').value.trim();
+            if (!input) {
+                alert('Please enter a message first! 😅');
+                return;
+            }
+
+            const imageUrl = getRandomTemplate();
+            const { top, bottom } = splitText(input);
+
+            document.getElementById('memeImage').src = imageUrl;
+            document.getElementById('topText').textContent = top.toUpperCase();
+            document.getElementById('bottomText').textContent = bottom.toUpperCase();
+
+            document.getElementById('inputSection').style.display = 'none';
+            document.getElementById('memeSection').style.display = 'block';
+
+            // Celebration confetti!
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        function downloadMeme() {
+            const memeContainer = document.getElementById('memeContainer');
+            html2canvas(memeContainer, {
+                backgroundColor: null,
+                scale: 2
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'my-awesome-meme.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        function newMeme() {
+            document.getElementById('memeSection').style.display = 'none';
+            document.getElementById('inputSection').style.display = 'block';
+            document.getElementById('messageInput').value = '';
+            document.getElementById('messageInput').focus();
+        }
+
+        // Add html2canvas for download functionality
+        const script = document.createElement('script');
+        script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+        document.head.appendChild(script);
+
+        // Enter key to generate
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                generateMeme();
+            }
+        });
+    </script>
+</body>
+</html>
